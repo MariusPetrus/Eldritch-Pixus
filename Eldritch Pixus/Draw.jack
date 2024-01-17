@@ -1,0 +1,145 @@
+class Draw {
+	// accesses the hard coded sprites
+	
+	// builds the ui, that is the right side of the screen outside of the game map
+	function void uiBorder() {
+		var int i;
+		var int j;
+		
+		do Gfx.borderTL(24+(512*0));
+		do Gfx.borderTR(31+(512*0));
+		do Gfx.borderBL(24+(512*15));		
+		do Gfx.borderBR(31+(512*15));
+		
+		let i = 25;
+		while(i < 31) {
+			do Gfx.borderTT(i+(512*0));
+			do Gfx.borderBB(i+(512*15));
+			let i = i + 1;
+		}
+		
+		let i = 1;
+		while(i < 15) {
+			do Gfx.borderLL(24+(512*i));
+			do Gfx.borderRR(31+(512*i));
+			let i = i + 1;
+		}
+		
+		return;
+	}
+			
+	// builds the game map border, that is the border of the area left of the ui
+	function void mapBorder() {
+		var int i;
+		
+		let i = 0;
+		while(i < 24) {
+			do Gfx.brick(i+(512*0));
+			do Gfx.brick(i+(512*15));
+			let i = i + 1;
+		}
+		
+		let i = 1;
+		while(i < 15) {
+			do Gfx.brick(0+(512*i));
+			do Gfx.brick(23+(512*i));
+			let i = i + 1;
+		}
+		
+		return;	
+	}
+	
+	// draws the entrance and the exit of the map
+	function void mapAccessPoints(Vector entrance, Vector exit) {
+		var int entranceX;
+		var int entranceY;
+		var int exitX;
+		var int exitY;
+		
+		let entranceX = entrance.getX();
+		let entranceY = entrance.getY();
+		let exitX = exit.getX();
+		let exitY = exit.getY();
+		
+		if((entranceY = 0)|(entranceY = 15)) {
+			do Gfx.entranceV(entranceX+(512*entranceY));
+		} else {
+			do Gfx.entranceH(entranceX+(512*entranceY));
+		}
+		do Gfx.door(exitX+(512*exitY));
+		
+		return;
+	}
+	
+	// draws a shrub 
+	function void shrub(Vector position) {
+		do Gfx.shrub(position.getX()+(512*position.getY()));
+		return;
+	}
+	
+	// draws a plank (wall)
+	function void plank(Vector position) {
+		do Gfx.plank(position.getX()+(512*position.getY()));
+		return;
+	}
+	
+	// draws a simple door (simple as opposed to the level exit door)
+	function void simpleDoor(Vector position) {
+		do Gfx.simpleDoor(position.getX()+(512*position.getY()));
+		return;
+	}
+	
+	// draws a spider
+	function void spider(Vector position) {
+		do Gfx.spider(position.getX()+(512*position.getY()));
+		return;
+	}
+	
+	// draws a potion on the ground
+	function void potion(Vector position) {
+		do Gfx.potionTile(position.getX()+(512*position.getY()));
+		return;
+	}
+	
+	// draws a key on the ground
+	function void key(Vector position) {
+		do Gfx.keyTile(position.getX()+(512*position.getY()));
+		return;
+	}
+	
+	// draws a powder bag on the ground
+	function void powder(Vector position) {
+		do Gfx.igniTile(position.getX()+(512*position.getY()));
+		return;
+	}
+	
+	// draws a white square tile effectively erasing the tile
+	function void erase(Vector position) {
+		do Gfx.erase(position.getX()+(512*position.getY())); 
+		return;
+	}
+	
+	// goes through the logic of building a stone wall with the terminal pillars 
+	//and the fence inbetween being oriented either vertically or horizontally
+	function void stoneWall(Vector start, Vector end) {
+		var int i;
+		
+		do Gfx.block(start.getX()+(512*start.getY()));
+		do Gfx.block(end.getX()+(512*end.getY()));
+		
+		if(start.getX() = end.getX()) {
+			let i = start.getY() + 1;
+			while(i < end.getY()) {
+				do Gfx.fenceV(start.getX()+(512*i));
+				let i = i + 1;
+			}
+		} else {
+			let i = start.getX() + 1;
+			while(i < end.getX()) {
+				do Gfx.fenceH(i+(512*start.getY()));
+				let i = i + 1;
+			}
+		}
+		return;
+	}
+}

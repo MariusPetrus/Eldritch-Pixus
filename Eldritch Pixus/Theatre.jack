@@ -1,0 +1,13 @@
+// this is where enemies, who can move around, would be handled
+class Theatre {
+	field int key;
+	
+	constructor Theatre new() {
+		let key = 0;
+		return this;
+	}
+	
+	method void populate() {
+		return;
+	}
+}

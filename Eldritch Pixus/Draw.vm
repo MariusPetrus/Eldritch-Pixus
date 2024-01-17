@@ -1,0 +1,375 @@
+function Draw.uiBorder 2
+push constant 24
+push constant 512
+push constant 0
+call Math.multiply 2
+add
+call Gfx.borderTL 1
+pop temp 0
+push constant 31
+push constant 512
+push constant 0
+call Math.multiply 2
+add
+call Gfx.borderTR 1
+pop temp 0
+push constant 24
+push constant 512
+push constant 15
+call Math.multiply 2
+add
+call Gfx.borderBL 1
+pop temp 0
+push constant 31
+push constant 512
+push constant 15
+call Math.multiply 2
+add
+call Gfx.borderBR 1
+pop temp 0
+push constant 25
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 31
+lt
+not
+if-goto WHILE_END0
+push local 0
+push constant 512
+push constant 0
+call Math.multiply 2
+add
+call Gfx.borderTT 1
+pop temp 0
+push local 0
+push constant 512
+push constant 15
+call Math.multiply 2
+add
+call Gfx.borderBB 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 1
+pop local 0
+label WHILE_EXP1
+push local 0
+push constant 15
+lt
+not
+if-goto WHILE_END1
+push constant 24
+push constant 512
+push local 0
+call Math.multiply 2
+add
+call Gfx.borderLL 1
+pop temp 0
+push constant 31
+push constant 512
+push local 0
+call Math.multiply 2
+add
+call Gfx.borderRR 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push constant 0
+return
+function Draw.mapBorder 1
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 24
+lt
+not
+if-goto WHILE_END0
+push local 0
+push constant 512
+push constant 0
+call Math.multiply 2
+add
+call Gfx.brick 1
+pop temp 0
+push local 0
+push constant 512
+push constant 15
+call Math.multiply 2
+add
+call Gfx.brick 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 1
+pop local 0
+label WHILE_EXP1
+push local 0
+push constant 15
+lt
+not
+if-goto WHILE_END1
+push constant 0
+push constant 512
+push local 0
+call Math.multiply 2
+add
+call Gfx.brick 1
+pop temp 0
+push constant 23
+push constant 512
+push local 0
+call Math.multiply 2
+add
+call Gfx.brick 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push constant 0
+return
+function Draw.mapAccessPoints 4
+push argument 0
+call Vector.getX 1
+pop local 0
+push argument 0
+call Vector.getY 1
+pop local 1
+push argument 1
+call Vector.getX 1
+pop local 2
+push argument 1
+call Vector.getY 1
+pop local 3
+push local 1
+push constant 0
+eq
+push local 1
+push constant 15
+eq
+or
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+push constant 512
+push local 1
+call Math.multiply 2
+add
+call Gfx.entranceV 1
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push local 0
+push constant 512
+push local 1
+call Math.multiply 2
+add
+call Gfx.entranceH 1
+pop temp 0
+label IF_END0
+push local 2
+push constant 512
+push local 3
+call Math.multiply 2
+add
+call Gfx.door 1
+pop temp 0
+push constant 0
+return
+function Draw.shrub 0
+push argument 0
+call Vector.getX 1
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.shrub 1
+pop temp 0
+push constant 0
+return
+function Draw.plank 0
+push argument 0
+call Vector.getX 1
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.plank 1
+pop temp 0
+push constant 0
+return
+function Draw.simpleDoor 0
+push argument 0
+call Vector.getX 1
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.simpleDoor 1
+pop temp 0
+push constant 0
+return
+function Draw.spider 0
+push argument 0
+call Vector.getX 1
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.spider 1
+pop temp 0
+push constant 0
+return
+function Draw.potion 0
+push argument 0
+call Vector.getX 1
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.potionTile 1
+pop temp 0
+push constant 0
+return
+function Draw.key 0
+push argument 0
+call Vector.getX 1
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.keyTile 1
+pop temp 0
+push constant 0
+return
+function Draw.powder 0
+push argument 0
+call Vector.getX 1
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.igniTile 1
+pop temp 0
+push constant 0
+return
+function Draw.erase 0
+push argument 0
+call Vector.getX 1
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.erase 1
+pop temp 0
+push constant 0
+return
+function Draw.stoneWall 1
+push argument 0
+call Vector.getX 1
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.block 1
+pop temp 0
+push argument 1
+call Vector.getX 1
+push constant 512
+push argument 1
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.block 1
+pop temp 0
+push argument 0
+call Vector.getX 1
+push argument 1
+call Vector.getX 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 0
+call Vector.getY 1
+push constant 1
+add
+pop local 0
+label WHILE_EXP0
+push local 0
+push argument 1
+call Vector.getY 1
+lt
+not
+if-goto WHILE_END0
+push argument 0
+call Vector.getX 1
+push constant 512
+push local 0
+call Math.multiply 2
+add
+call Gfx.fenceV 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+goto IF_END0
+label IF_FALSE0
+push argument 0
+call Vector.getX 1
+push constant 1
+add
+pop local 0
+label WHILE_EXP1
+push local 0
+push argument 1
+call Vector.getX 1
+lt
+not
+if-goto WHILE_END1
+push local 0
+push constant 512
+push argument 0
+call Vector.getY 1
+call Math.multiply 2
+add
+call Gfx.fenceH 1
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+label IF_END0
+push constant 0
+return

@@ -1,0 +1,262 @@
+class Game {
+	// holds the inventory instance
+	field Inventory inventory;
+	// used to refresh not too often to avoid flickering
+	field int refreshTimer;
+	// player position
+	field Vector playerPosition;
+	// current map
+	field Map map;
+	// current level
+	field int level;
+	
+	constructor Game new() {
+		var int i;
+		let refreshTimer = 10000;
+		let level = 0;
+		return this;
+	}
+	
+	
+	
+	method void run() {
+		var int key;
+		
+		
+		
+		// run the game
+		while(true) {
+			
+			///////////////////////// LEVELS ARE CALLED BELOW /////////////////////////
+			
+			// level numbers are always even, level/2 corresponds to the level index
+			if(level = 0) {
+				// reset to default for the next level
+				do nextLevel();
+				// select the map
+				let playerPosition = map.movementTutorial();
+				// add items to inventory
+				// <no starting items in this level>
+				
+			}
+			if(level = 2) {
+				do nextLevel();
+				
+				let playerPosition = map.itemsTutorial();
+			}
+			if(level = 4) {
+				do nextLevel();
+				
+				let playerPosition = map.level1();
+			}
+			if(level = 6) {
+				do nextLevel();
+				
+				let playerPosition = map.level2();
+				
+				do inventory.addItem(1);
+			}
+			if(level = 8) {
+				do nextLevel();
+				
+				let playerPosition = map.win();
+				// for pyromaniacs
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+				do inventory.addItem(2);
+			}
+			
+			
+			///////////////////////// LEVELS ARE CALLED ABOVE /////////////////////////
+			
+			
+			// graphically place the player
+			do placePlayer();
+			
+			// only proceed every few ticks to avoid ugly flickering
+			if(refreshTimer < 10000) {
+				let refreshTimer = refreshTimer + 1;
+			}
+			// refresh the inventory
+			do inventory.refresh();
+			
+			// check for key press
+			let key = Keyboard.keyPressed();
+			if(~(key = 0)) {
+				if(refreshTimer > 9999) {
+					if(key = 131) {
+						do moveUp();
+					}
+					if(key = 133) {
+						do moveDown();
+					}
+					if(key = 130) {
+						do moveLeft();
+					}
+					if(key = 132) {
+						do moveRight();
+					}
+					let refreshTimer = 0;
+				}
+			}
+		}
+		return;
+	}
+	
+	// do all the cleanup for starting a new level
+	method void nextLevel() {
+		do solidify();
+		let inventory = Inventory.new();
+		let map = Map.new();
+		do Gfx.wipe(513);
+		let level = level + 1;
+		return;
+	}
+	
+	// place the player graphically onto the screen
+	method void placePlayer() {
+		// TO-DO: implement a Draw.class function instead
+		do Gfx.seeker(playerPosition.getX()+(512*playerPosition.getY()));
+		return;
+	}
+	
+	// place immutable elements like the map border and inventory ui
+	method void solidify() {
+		do Draw.uiBorder();
+		do Draw.mapBorder();
+		return;
+	}
+	
+	///////////////////////////////////////////////////////////////
+	// player movement // WIP to be extracted into another class //
+	///////////////////////////////////////////////////////////////
+	method void move(Vector target) {
+		var int x;
+		var int y;
+		
+		let x = target.getX();
+		let y = target.getY();
+		
+		// end level if exit reached
+		if(map.isExit(target)) {
+			let level = level + 1;
+		}
+		
+		//////////////////////////////
+		// prevent  border-crossing //
+		//////////////////////////////
+		if((y = 0)|(y = 15)){		//
+			return;					//
+		}							//
+		if((x = 0)|(x = 23)){		//
+			return;					//
+		}							//
+		//////////////////////////////
+		
+		// the code below detects if the next tile is a tile of interest [>>>]
+		if(map.isSpider(target)) {
+			if(inventory.contains(0)) {
+				do inventory.removeItem(0);
+				do map.removeSpecialTile(target);
+			}
+		}
+		
+		if(map.isDoor(target)) {
+			if(inventory.contains(1)) {
+				do inventory.removeItem(1);
+				do map.removeSpecialTile(target);
+			}
+		}
+
+		if(map.isShrub(target)) {
+			if(inventory.contains(2)) {
+				do inventory.removeItem(2);
+				do map.removeSpecialTile(target);
+			}
+		}
+		
+		if(map.isPotion(target)) {
+			if(inventory.isNotFull()) {
+				do inventory.addItem(0);
+				do map.removeSpecialTile(target);
+			}
+		}
+		
+		if(map.isKey(target)) {
+			if(inventory.isNotFull()) {
+				do inventory.addItem(1);
+				do map.removeSpecialTile(target);
+			}
+		}
+		
+		if(map.isPowder(target)) {
+			if(inventory.isNotFull()) {
+				do inventory.addItem(2);
+				do map.removeSpecialTile(target);
+			}
+		}
+		
+		// [<<<]
+		
+		// prevents player from crossing obstacles
+		if(map.obstacle(target)) {
+			return;
+		}
+		
+		// player sprite cleanup
+		do Draw.erase(playerPosition);
+		// proceed to move the player
+		let playerPosition = target;
+		return;
+	}
+	
+	
+	// one method for each movement direction
+	method void moveUp() {
+		do move(Vector.new(playerPosition.getX(), playerPosition.getY() - 1));
+		return;
+	}
+	
+	method void moveDown() {
+		do move(Vector.new(playerPosition.getX(), playerPosition.getY() + 1));
+		return;
+	}
+	
+	method void moveLeft() {
+		do move(Vector.new(playerPosition.getX() - 1, playerPosition.getY()));
+		return;
+	}
+	
+	method void moveRight() {
+		do move(Vector.new(playerPosition.getX() + 1, playerPosition.getY()));
+		return;
+	}
+	/////////////////////////////////////////////////////////////////////////
+	////////////////////// END OF PLAYER MOVEMENT CODE //////////////////////
+	/////////////////////////////////////////////////////////////////////////
+
+	// disposal method
+	method void dispose() {
+		do map.dispose();
+		do inventory.dispose();
+		do Memory.deAlloc(this);
+		return;
+	}
+}

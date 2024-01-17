@@ -1,0 +1,27 @@
+// a simple vector to contain a pair of two values
+class Vector {
+	field int x;
+	field int y;
+	
+	constructor Vector new(int xInput, int yInput) {
+		let x = xInput;
+		let y = yInput;
+		return this;
+	}
+	
+	// x getter
+	method int getX() {
+		return x;
+	}
+	
+	// y getter
+	method int getY() {
+		return y;
+	}
+	
+	// disposal method
+	method void dispose() {
+		do Memory.deAlloc(this);
+		return;
+	}
+}

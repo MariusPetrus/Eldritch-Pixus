@@ -1,0 +1,184 @@
+class Inventory {
+	// holds items in whatever order they come in
+	field Array inventory;
+	// keeps track of the current size of inventory
+	field int inventorySize;
+	// used to optimized graphics by timing the refresh event
+	field int refreshTimer;
+	
+	////////////////////////////////////////////////////
+	//// ITEMS: 0 - POTION, 1 - KEY, 2 - IGNIPOWDER ////
+	////////////////////////////////////////////////////
+	
+	
+	constructor Inventory new() {
+		let inventory = Array.new(21);
+		let inventorySize = 0;
+		// -1 marks the end of the inventory
+		let inventory[0] = -1;
+		let refreshTimer = 1000;
+		return this;
+	}
+	
+	// actualize inventory grafically
+	method void refresh() {
+		let refreshTimer = refreshTimer + 1;
+		if(refreshTimer > 1000) {
+			do clearInventory();
+			do fillInventory();
+			let refreshTimer = 0;
+		}		
+		return;
+	}
+	
+	// add an item to the inventory
+	method void addItem(int itemID) {
+		if(inventorySize = 21) {
+			return;
+		}
+		// add potion to inventory
+		if(itemID = 0) {
+			let inventory[inventorySize] = 0;
+			let inventory[inventorySize + 1] = -1;
+			let inventorySize = inventorySize + 1;
+		}
+		// add key to inventory
+		if(itemID = 1) {
+			let inventory[inventorySize] = 1;
+			let inventory[inventorySize + 1] = -1;
+			let inventorySize = inventorySize + 1;
+		}
+		// add ignipowder to inventory
+		if(itemID = 2) {
+			let inventory[inventorySize] = 2;
+			let inventory[inventorySize + 1] = -1;
+			let inventorySize = inventorySize + 1;
+		}
+		return;
+	}
+	
+	// remove an item
+	method void removeItem(int itemID) {
+		var int i;
+		var int item;
+		
+		let i = 0;
+		while(i < 21) {
+			let item = inventory[i];
+			if(item < 0) {
+				return;
+			}
+			if(item = itemID) {
+				let inventory[i] = -1;
+				do cascadeItems(i);
+				let inventorySize = inventorySize - 1;
+				return;
+			}
+			let i = i + 1;
+		}
+		return;
+	}
+	
+	// make the items in the inventory "fall" towards the first slot to cover the hole made by removal of one item
+	method void cascadeItems(int x) {
+		var int i;
+		var int temp;
+		
+		let i = x;
+		while(i < 20) {
+			let temp = inventory[i];
+			let inventory[i] = inventory[i + 1];
+			let inventory[i + 1] = temp;			
+			let i = i + 1;
+		}
+		return;
+	}
+	
+	// check if searched item is present in the inventory
+	method boolean contains(int itemID) {
+		var boolean result;		
+		var int i;
+		var int item;
+		
+		let result = false;
+		
+		let i = 0;
+		while(i < inventorySize) {
+			let item = inventory[i];
+			
+			if(item = itemID) {
+				let result = true;
+			}
+			let i = i + 1;
+		}		
+		
+		return result;
+	}
+	
+	// apply the empty texture to every inventory slot to clear it (used for refreshing the ui)
+	method void clearInventory() {
+		var int i;
+		var int x;
+		var int y;
+		
+		let x = 25;
+		let y = 1;
+		
+		let i = 0;
+		while(i < 21) {
+			if(x > 30) {
+				let x = 25;
+				let y = y + 2;
+			}
+			do Gfx.inventorySlot(x+(512*y));
+			let x = x + 2;
+			let i = i + 1;
+		}
+		return;
+	}
+	
+	// graphically fills the inventory with the correct sprites
+	method void fillInventory() {
+		var int i;
+		var int x;
+		var int y;
+		
+		let x = 25;
+		let y = 1;
+		
+		let i = 0;
+		while(i < inventorySize) {
+			if(x > 30) {
+				let x = 25;
+				let y = y + 2;
+			}
+			if(inventory[i] = 0) {
+				do Gfx.itemPotion(x+(512*y));
+			} 
+			if(inventory[i] = 1){
+				do Gfx.itemKey(x+(512*y));
+			}
+			if(inventory[i] = 2){
+				do Gfx.itemIgniPowder(x+(512*y));
+			}
+			let x = x + 2;
+			let i = i + 1;
+		}
+		return;
+	}
+	
+	// return true if the inventory can fit more items
+	method boolean isNotFull() {
+		if(inventorySize < 21) {
+			return true;
+		}
+		return false;
+	}
+	
+	// disposal method
+	method void dispose() {
+		do inventory.dispose();
+		do Memory.deAlloc(this);
+		return;
+	}
+}
